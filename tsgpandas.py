@@ -11,7 +11,6 @@ pip install altair_saver
 sudo apt install chromium-chromedriver
 
 Pandas
-  Getting Started: https://pandas.pydata.org/docs/getting_started/index.html
   User Guide: https://pandas.pydata.org/docs/user_guide/
   API Referenz: https://pandas.pydata.org/docs/reference/
 
@@ -34,6 +33,8 @@ ENDDATE = datetime(2022, 12, 31)
 DAT = "../Mitglieder/22-05-18 Mitglieder gesamt - extern.csv"
 
 df = pd.read_csv(DAT)
+
+# print(df.loc[df.Nachname == "Högl"])
 
 def to_dt(s):
     # s is a date string with format "17.09.2022"  # evtl auch "%m/%d/%Y"
@@ -124,6 +125,8 @@ for i in df4.index:
     td = ENDDATE - d
     q = td/YEAR
     n += 1
+    #print(n, df4.iloc[i].Status, df4.iloc[i].Vorname, df4.iloc[i].Nachname, d.date(), "{:4.2f}".format(q))
+
     # Alter ist eine Kommazahl, die das Alter am Tag ENDDATE angibt.
     row = {'Status': df4.iloc[i].Status, 'Vorname': df4.iloc[i].Vorname,
             'Nachname': df4.iloc[i].Nachname, 'Geburtsdatum': d.date(),
@@ -132,9 +135,11 @@ for i in df4.index:
 
 df5 = df5.reset_index(drop=True)
 
+print("df5:")
+
 print("Das angegebene Alter wird am Tag {} erreicht.".format(ENDDATE.date()))
 
-# XXX to do: die Spalte 'Alter' mit nur zwei Nachkommastellen ausgeben, {:4.2f}
+# XXX to do: die Spalte 'Alter' mit nur zwei Nachkommastellen ausgeben.
 display(df5.to_string())
 
 
@@ -154,7 +159,7 @@ for i in range(4, 18):
     df7 = pd.concat([df7, pd.DataFrame(row, index=[0])])
 
 
-chart = alt.Chart(df7, title="TSG Tennis-Jugend 2022 (4-17 Jahre)").mark_bar().encode(
+chart = alt.Chart(df7, title="TSG Tennis-Jugend 2022 (4-17 Jahre)").mark_bar(size=30).encode(
     x=alt.X("Alter", title="Alter"),
     y=alt.Y("sum(Anzahl)", title="Anzahl"),
     color='Kategorie').properties(width=800, height=500, padding=20)
@@ -168,4 +173,5 @@ altair_saver.save(chart, "out.svg")
 # U12, ab 1.1.2011 und spaeter
 # U10, ab 1.1.2013 und spaeter
 # U9, ab 1.1.2014 und spaeter
+
 
